@@ -1,7 +1,7 @@
+#pragma once
 #include <string.h>
 #include <iostream>
 #include "t_token.h"
-#pragma once
 #ifndef SEARCH_KEY_WORD_H
 #define SEARCH_KEY_WORD_H
 char* reservedKeywords[] = {
@@ -13,12 +13,12 @@ int searchKeyWord(char* word){
     int right = sizeof(reservedKeywords)/sizeof(char*) - 1;
     while (left <= right) {
         int mid = left + (right - left) / 2;
-        if (strcmp(reservedKeywords[mid],word) == 0) {
-            return mid; // Encontrou o elemento, retorna a posição.
+        if (strcmp(reservedKeywords[mid], word) == 0) {
+            return mid; 
         } else if (strcmp(reservedKeywords[mid],word) < 0) {
-            left = mid + 1; // O elemento está na metade direita.
+            left = mid + 1; 
         } else {
-            right = mid - 1; // O elemento está na metade esquerda.
+            right = mid - 1;
         }
     }
     return UNKNOWN;
