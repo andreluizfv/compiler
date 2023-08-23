@@ -11,7 +11,7 @@ char* reservedKeywords[] = {
 int searchKeyWord(char* word){
     int left = 0;
     int right = sizeof(reservedKeywords)/sizeof(char*) - 1;
-    while (left <= right) {
+    while (left < right) {
         int mid = left + (right - left) / 2;
         if (strcmp(reservedKeywords[mid], word) == 0) {
             return mid; 
