@@ -1,9 +1,10 @@
 #include <iostream>
-#include <string.h>
+#include <string>
 #include <map>
+
 #include "t_token.h"
 #include "t_const.h"
-#include "searchKeyWord.h"
+#include "Utils.h"
 using namespace std;
 
 // classe para usar a searchName
@@ -15,11 +16,10 @@ class Tokens{
         int count = 0; // representa o tamanho da hash table
 
     public:
-        int searchName(char* word){
-            // checando se existe, caso nao exista cria um novo elemento
+        int searchName(const std::string& word){
             if (mapObject.find(word) == mapObject.end()){
                 mapObject[word] = count;
-                count = count + 1;
+                count++;
             }
             return mapObject[word];         
         }
@@ -27,7 +27,7 @@ class Tokens{
 
 
 int main(int argc, char* argv[]){
-    cout << searchKeyWord("ELSE") << endl;
+    cout << Utils::searchKeyword("ELSE") << endl;
     Tokens tk;
     cout << tk.searchName("var1") << endl;
     cout << tk.searchName("var2") << endl;
