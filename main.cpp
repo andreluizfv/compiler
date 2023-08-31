@@ -1,34 +1,47 @@
 #include <iostream>
-#include <string>
-#include <map>
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include "Scanner.h"
+#include "Token.h"
 
-#include "t_token.h"
-#include "t_const.h"
-#include "Utils.h"
-using namespace std;
+void run(std::string source) {
+    Scanner scanner(source);
+    std::vector<Token> tokens = scanner.scanTokens();
 
-// classe para usar a searchName
-// Antes de chamar o metodo search name, fazer um if retorno da searchKeyName == 48
-// Esse retorno representa o UNKNOWN de registros, ou seja, nao tem token primario 
-class Tokens{
-    private:
-        map<string, int> mapObject;
-        int count = 0; // representa o tamanho da hash table
+    for(auto token : tokens) {
+        std::cout << token.toString() << std::endl;
+    }
+}
 
-    public:
-        int searchName(const std::string& word){
-            if (mapObject.find(word) == mapObject.end()){
-                mapObject[word] = count;
-                count++;
-            }
-            return mapObject[word];         
-        }
-};
+void runFile(std::string filePath) {
+    std::ifstream file(filePath);
+    std::stringstream buffer;
 
+    if(file.is_open()) {
+        buffer << file.rdbuf();
+        file.close();
+        run(buffer.str());
+    }
+}
 
-int main(int argc, char* argv[]){
-    cout << Utils::searchKeyword("ELSE") << endl;
-    Tokens tk;
-    cout << tk.searchName("var1") << endl;
-    cout << tk.searchName("var2") << endl;
+void runPrompt() {
+    for (;;) {
+        std::cout << "> ";
+        std::string line;
+        std::getline(std::cin, line);
+        if (line.empty()) break;
+        run(line);
+    }
+}
+
+int main(int argc, char* argv[]) {
+    if (argc > 2) {
+        std::cout << "Too many cli args";
+        exit(64);
+    } else if(argc == 2){
+        runFile(argv[1]);
+    } else {
+        runPrompt();
+    }
 }

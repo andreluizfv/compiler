@@ -1,12 +1,10 @@
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.22)
 project(compiler)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 include_directories(.)
 
 add_executable(compiler
-        constants.h
         main.cpp
-        t_const.h
-        t_token.h Utils.h Utils.cpp)
+        TokenType.h Utils.h Utils.cpp Token.cpp Token.h Scanner.cpp Scanner.h)

@@ -1,7 +1,7 @@
 #pragma once
-#ifndef T_TOKEN_H
-#define T_TOKEN_H
-enum t_token {
+#ifndef TOKEN_TYPE_H
+#define TOKEN_TYPE_H
+enum TokenType {
     //reserved keywords
     ARRAY, BOOLEAN, BREAK, CHAR, CONTINUE, DO, ELSE, FALSE, FUNCTION, IF, 
     INTEGER, OF, STRING, STRUCT, TRUE, TYPE, VAR, WHILE,
@@ -16,4 +16,4 @@ enum t_token {
     // no one else
     UNKNOWN
 };
-#endif // T_TOKEN_H
+#endif // TOKEN_TYPE_H

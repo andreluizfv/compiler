@@ -1,6 +1,3 @@
-//
-// Created by pbbdasilva on 8/23/23.
-//
 #include "Utils.h"
 using namespace Utils;
 

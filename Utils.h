@@ -1,7 +1,3 @@
-//
-// Created by pbbdasilva on 8/23/23.
-//
-
 #pragma once
 
 #ifndef COMPILER_UTILS_H
@@ -11,7 +7,7 @@
 #include <vector>
 #include <algorithm>
 
-#include "t_token.h"
+#include "TokenType.h"
 namespace Utils {
     static std::vector<std::string> reservedKeywords = {
             "ARRAY", "BOOLEAN", "BREAK", "CHAR", "CONTINUE", "DO", "ELSE", "FALSE", "FUNCTION", "IF",
