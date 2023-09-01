@@ -131,8 +131,8 @@ void Scanner::parseString() {
     }
 
     uint len = current - start - 1;
-    addToken(STRINGVAL, source.substr(start + 1, len));
     parseNextChar();
+    addToken(STRINGVAL, source.substr(start + 1, len));
 }
 
 bool Scanner::isDigit(char c) {

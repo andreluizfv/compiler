@@ -16,4 +16,11 @@ enum TokenType {
     // no one else
     UNKNOWN
 };
+
+//static const std::string toString(TokenType t) {
+//    switch (t) {
+//        case
+//    }
+//}
+
 #endif // TOKEN_TYPE_H
