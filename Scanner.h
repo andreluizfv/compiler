@@ -36,6 +36,8 @@ public:
 
     char peek();
 
+    void parseChar();
+
     void parseString();
 
     static bool isDigit(char c);

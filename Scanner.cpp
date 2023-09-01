@@ -76,6 +76,7 @@ void Scanner::scanToken() {
         case '\t': break;
 
         case '\n': line++; break;
+        case '\'': parseChar(); break;
         case '"': parseString(); break;
         default:
             if(isDigit(c)) {
@@ -100,7 +101,7 @@ void Scanner::addToken(TokenType type, const Object& literal) {
 }
 
 void Scanner::noMatchError() const {
-    std::cout << "token did not match any value at line " << line;
+    std::cout << "token did not match any value at line " << line << std::endl;
 }
 
 bool Scanner::match(char expected) {
@@ -117,6 +118,19 @@ char Scanner::peek() {
 char Scanner::peekNext() {
     if(current + 1 >= source.size()) return '\0';
     return source[current + 1];
+}
+
+void Scanner::parseChar() {
+    while(peek() != '\'' and !isEnd()) parseNextChar();
+
+    uint len = current - start - 1;
+    if(isEnd() or len > 1) {
+        noMatchError();
+        return;
+    }
+
+    parseNextChar();
+    addToken(CHARACTER, source.substr(start + 1, len));
 }
 
 void Scanner::parseString() {
