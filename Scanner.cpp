@@ -91,12 +91,12 @@ char Scanner::parseNextChar() {
 }
 
 void Scanner::addToken(TokenType type) {
-    std::string txt = source.substr(start, current - start + 1);
+    std::string txt = source.substr(start, current - start);
     tokens.emplace_back(type, txt, "undefined");
 }
 
 void Scanner::addToken(TokenType type, const Object& literal) {
-    tokens.emplace_back(type, source.substr(start, current - start + 1), literal);
+    tokens.emplace_back(type, source.substr(start, current - start), literal);
 }
 
 void Scanner::noMatchError() const {
@@ -147,7 +147,7 @@ void Scanner::parseNumber() {
         while (isDigit(peek()) and !isEnd()) parseNextChar();
     }
 
-    addToken(NUMERAL,source.substr(start, current - start + 1));
+    addToken(NUMERAL,source.substr(start, current - start));
 }
 
 bool Scanner::isAlphanumeric(char c) {
@@ -156,7 +156,7 @@ bool Scanner::isAlphanumeric(char c) {
 
 void Scanner::parseIdentifier() {
     while(isAlphanumeric(peek()) or isDigit(peek())) parseNextChar();
-    std::string text = source.substr(start, current - start + 1);
+    std::string text = source.substr(start, current - start);
     auto itr = reservedWords.find(text);
     auto type = itr == reservedWords.end() ? ID : itr->second;
     addToken(type);
