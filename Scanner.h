@@ -28,6 +28,10 @@ public:
 
     void addToken(TokenType type);
 
+    void addToken(TokenType type, int tokenSecond);
+
+    void addToken(TokenType type, const Object& literal, int tokenSecond);
+
     void addToken(TokenType type, const Object& literal);
 
     void noMatchError() const;

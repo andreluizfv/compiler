@@ -12,8 +12,10 @@ public:
     TokenType type;
     std::string lexeme;
     Object literal;
+    int tokenSecond;
 
     Token(TokenType type, std::string lexeme, Object literal);
+    Token(TokenType type, std::string lexeme, Object literal, int tokenSecond);
     std::string toString() const;
 };
 

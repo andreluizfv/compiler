@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Scanner.h"
+#include "Utils.h"
 
 Scanner::Scanner(std::string source) {
     this->source = std::move(source);
@@ -96,8 +97,17 @@ void Scanner::addToken(TokenType type) {
     tokens.emplace_back(type, txt, "undefined");
 }
 
+void Scanner::addToken(TokenType type, int tokenSecond) {
+    std::string txt = source.substr(start, current - start);
+    tokens.emplace_back(type, txt, "undefined", tokenSecond);
+}
+
 void Scanner::addToken(TokenType type, const Object& literal) {
     tokens.emplace_back(type, source.substr(start, current - start), literal);
+}
+
+void Scanner::addToken(TokenType type, const Object& literal, int tokenSecond) {
+    tokens.emplace_back(type, source.substr(start, current - start), literal, tokenSecond);
 }
 
 void Scanner::noMatchError() const {
@@ -128,9 +138,9 @@ void Scanner::parseChar() {
         noMatchError();
         return;
     }
-
     parseNextChar();
-    addToken(CHARACTER, source.substr(start + 1, len));
+    int tokenSecond = Utils::Literals::addCharConst(source.substr(start + 1, len)[0]);
+    addToken(CHARACTER, source.substr(start + 1, len), tokenSecond);
 }
 
 void Scanner::parseString() {
@@ -146,7 +156,8 @@ void Scanner::parseString() {
 
     uint len = current - start - 1;
     parseNextChar();
-    addToken(STRINGVAL, source.substr(start + 1, len));
+    int tokenSecond = Utils::Literals::addStringConst(source.substr(start + 1, len));
+    addToken(STRINGVAL, source.substr(start + 1, len), tokenSecond);
 }
 
 bool Scanner::isDigit(char c) {
@@ -160,8 +171,8 @@ void Scanner::parseNumber() {
         parseNextChar();
         while (isDigit(peek()) and !isEnd()) parseNextChar();
     }
-
-    addToken(NUMERAL,source.substr(start, current - start));
+    int tokenSecond = Utils::Literals::addIntConst(stoi(source.substr(start, current - start)));
+    addToken(NUMERAL,source.substr(start, current - start), tokenSecond);
 }
 
 bool Scanner::isAlphanumeric(char c) {
@@ -173,5 +184,6 @@ void Scanner::parseIdentifier() {
     std::string text = source.substr(start, current - start);
     auto itr = reservedWords.find(text);
     auto type = itr == reservedWords.end() ? ID : itr->second;
-    addToken(type);
+    itr == reservedWords.end() ? addToken(type, Utils::Literals::searchName(text))
+                               : addToken(type);
 }

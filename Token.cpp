@@ -1,13 +1,25 @@
 #include "Token.h"
-
+#include <iostream>
 #include <utility>
+#define stringify( name ) #name
 
 Token::Token(TokenType type, std::string lexeme, Object literal) {
     this->type = type;
     this->lexeme = std::move(lexeme);
     this->literal = std::move(literal);
+    this->tokenSecond = INT32_MAX;
+}
+
+Token::Token(TokenType type, std::string lexeme, Object literal, int tokenSecond) {
+    this->type = type;
+    this->lexeme = std::move(lexeme);
+    this->literal = std::move(literal);
+    this->tokenSecond = tokenSecond;
 }
 
 std::string Token::toString() const {
-    return lexeme;
+    bool hasSecond = (type == CHARACTER) ||  (type == NUMERAL) || (type == STRINGVAL)  || (type == ID);
+    return hasSecond ?
+            ( (std::string) "token 1º: " + std::to_string(type) + " token 2º: " + std::to_string(tokenSecond) ) :
+            ( (std::string) "token 1º: " + std::to_string(type) );
 }
