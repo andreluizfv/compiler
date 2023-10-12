@@ -21,4 +21,4 @@ namespace Scope
     scope_object FindWhenUsed(int tokenSecond);
 }
 
-#endif // SCOPE_TOKEN_H
+#endif // COMPILER_SCOPE_H
