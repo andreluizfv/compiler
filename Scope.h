@@ -1,5 +1,6 @@
-#ifndef COMPILER_TOKEN_H
-#define COMPILER_TOKEN_H
+#pragma once
+#ifndef COMPILER_SCOPE_H
+#define COMPILER_SCOPE_H
 #include <vector>
 using namespace std;
 namespace Scope
@@ -20,4 +21,4 @@ namespace Scope
     scope_object FindWhenUsed(int tokenSecond);
 }
 
-#endif // COMPILER_TOKEN_H
+#endif // SCOPE_TOKEN_H
