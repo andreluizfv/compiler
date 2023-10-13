@@ -16,8 +16,8 @@ namespace Scope
     int NewBlock();
     int EndBlock();
     scope_object Define(int tokenSecond);
-    scope_object SearchWhenDeclared(int tokenSecond);
-    scope_object FindWhenUsed(int tokenSecond);
+    std::vector<scope_object>::iterator SearchWhenDeclared(int tokenSecond);
+    std::vector<scope_object>::iterator FindWhenUsed(int tokenSecond);
 }
 
 #endif // COMPILER_TOKEN_H

@@ -27,6 +27,19 @@ namespace Utils {
         static int addStringConst(std::string s);
         static int addIntConst(int n);
     };
+
+    class RedeclaredException : public std::exception{
+    public:
+        char *what(){
+            return "Variable redeclared";
+        }
+    };
+    class NotDeclaredException : public std::exception{
+    public:
+        char *what(){
+            return "Variable not declared";
+        }
+    };
 }
 
 #endif //COMPILER_UTILS_H
