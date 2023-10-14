@@ -1,7 +1,6 @@
 #include "Token.h"
 #include <iostream>
 #include <utility>
-#define stringify( name ) #name
 
 Token::Token(TokenType type, std::string lexeme, Object literal) {
     this->type = type;
@@ -20,6 +19,6 @@ Token::Token(TokenType type, std::string lexeme, Object literal, int tokenSecond
 std::string Token::toString() const {
     bool hasSecond = (type == CHARACTER) ||  (type == NUMERAL) || (type == STRINGVAL)  || (type == ID);
     return hasSecond ?
-            ( (std::string) "token 1º: " + std::to_string(type) + " token 2º: " + std::to_string(tokenSecond) ) :
-            ( (std::string) "token 1º: " + std::to_string(type) );
+            ( (std::string) "token: " + lexeme + " aux token: " + std::to_string(tokenSecond) ) :
+            ( (std::string) "token: " + lexeme );
 }
