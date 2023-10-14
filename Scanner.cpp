@@ -17,6 +17,7 @@ Scanner::Scanner(std::string source) {
     reservedWords["if"] = IF;
     reservedWords["integer"] = INTEGER;
     reservedWords["of"] = OF;
+    reservedWords["return"] = RETURN;
     reservedWords["string"] = STRING;
     reservedWords["struct"] = STRUCT;
     reservedWords["true"] = TRUE;
