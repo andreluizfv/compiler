@@ -4,6 +4,7 @@
 #include <vector>
 #include "Scanner.h"
 #include "Token.h"
+#include "Syntactic.h"
 
 void run(std::string source) {
     Scanner scanner(source);
@@ -12,6 +13,7 @@ void run(std::string source) {
     for(auto token : tokens) {
         std::cout << token.toString() << std::endl;
     }
+    Syntactic syntactic(tokens);
 }
 
 void runFile(std::string filePath) {
