@@ -8,7 +8,7 @@
 
 using namespace Semantics;
 
-void Semantics( RuleSign ruleNo, int tokenSecond = -1){
+void Semantics::semantics( RuleSign ruleNo, int tokenSecond){
     syntactic::t_attrib IDD , IDU, ID;
     switch (ruleNo){
         case R_IDD_0:{

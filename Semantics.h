@@ -9,7 +9,7 @@ namespace Semantics{
 
     static std::vector<syntactic::t_attrib> stackSem;
     
-    void Semantics( RuleSign ruleNo, int tokenSecond);
+    void semantics( RuleSign ruleNo, int tokenSecond);
     
     void pushSem (syntactic::t_attrib &attrib);
     void popSem(int popsNumber);

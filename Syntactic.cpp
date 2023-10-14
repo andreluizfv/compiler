@@ -40,7 +40,7 @@ namespace syntactic {
                 int r = RULE(p)-1;
                 for (int i = 0; i <  aux_table[r][0]; i++) stack.pop();
                 stack.push(action_table[stack.top()][aux_table[r][1]]);
-                Semantics::Semantics(static_cast<RuleSign>(r), itr->tokenSecond);
+                Semantics::semantics(static_cast<RuleSign>(r), itr->tokenSecond);
             } else {
                 error();
             }
