@@ -7,7 +7,7 @@
 #include <variant>
 #include <vector>
 #include <algorithm>
-
+#include <string>
 #include "TokenType.h"
 namespace Utils {
     static std::vector<std::string> reservedKeywords = {
@@ -26,6 +26,19 @@ namespace Utils {
         static int addCharConst(char c);
         static int addStringConst(std::string s);
         static int addIntConst(int n);
+    };
+
+    class RedeclaredException : public std::exception{
+    public:
+        std::string what(){
+            return "Variable redeclared";
+        }
+    };
+    class NotDeclaredException : public std::exception{
+    public:
+        std::string what(){
+            return "Variable redeclared";
+        }
     };
 }
 

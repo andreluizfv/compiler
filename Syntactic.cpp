@@ -6,6 +6,7 @@
 #include "ParserTables.h"
 #include "Syntactic.h"
 #include "Token.h"
+#include "Semantics.h"
 
 #define IS_SHIFT(p) ((p) > 0)
 #define IS_REDUCTION(p) ((p) < 0)
