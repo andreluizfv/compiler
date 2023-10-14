@@ -1379,4 +1379,4 @@ enum RuleSign {
   R_NF_0,
 
 };
-#endif
+#endif // PARSER_TABLES_H
