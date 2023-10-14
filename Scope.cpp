@@ -13,6 +13,7 @@ int Scope::NewBlock(){
 }
 
 int Scope::EndBlock(){
+    SymbolTable.pop_back();
     return --nCurrentLevel;
 }
 

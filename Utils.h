@@ -7,8 +7,10 @@
 #include <variant>
 #include <vector>
 #include <algorithm>
-
+#include <cstring>
 #include "TokenType.h"
+#include <string> 
+using namespace std; 
 namespace Utils {
     static std::vector<std::string> reservedKeywords = {
             "ARRAY", "BOOLEAN", "BREAK", "CHAR", "CONTINUE", "DO", "ELSE", "FALSE", "FUNCTION", "IF",
@@ -30,14 +32,14 @@ namespace Utils {
 
     class RedeclaredException : public std::exception{
     public:
-        char *what(){
+        string what(){
             return "Variable redeclared";
         }
     };
     class NotDeclaredException : public std::exception{
     public:
-        char *what(){
-            return "Variable not declared";
+        string what(){
+            return "Variable redeclared";
         }
     };
 }

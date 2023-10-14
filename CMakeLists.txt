@@ -7,4 +7,6 @@ include_directories(.)
 
 add_executable(compiler
         main.cpp
-        TokenType.h Utils.h Utils.cpp Token.cpp Token.h Scanner.cpp Scanner.h)
+        TokenType.h Utils.h Utils.cpp Token.cpp Token.h Scanner.cpp Scanner.h
+        Semantics.h Semantics.cpp Syntatic.h
+        Scope.h Scope.cpp)
