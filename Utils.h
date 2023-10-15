@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <string>
 #include "TokenType.h"
+#include "ParserTables.h"
 namespace Utils {
     static std::vector<std::string> reservedKeywords = {
             "ARRAY", "BOOLEAN", "BREAK", "CHAR", "CONTINUE", "DO", "ELSE", "FALSE", "FUNCTION", "IF",

@@ -4,11 +4,11 @@
 
 using namespace Scope;
 
-Scope::scope_object::scope_object(int nName){ this->nName = nName;}
+scope_object::scope_object(int nName){ this->nName = nName;}
 
 int Scope::NewBlock(){
     ++nCurrentLevel;
-    SymbolTable.push_back(std::vector<scope_object> ());
+    SymbolTable.emplace_back();
     return nCurrentLevel;
 }
 

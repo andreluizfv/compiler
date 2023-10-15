@@ -4,7 +4,7 @@
 
 #ifndef COMPILER_SYNTACTIC_H
 #define COMPILER_SYNTACTIC_H
-
+#include <vector>
 #include "Token.h"
 
 class Syntactic {
