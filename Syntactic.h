@@ -11,7 +11,7 @@ class Syntactic {
 public:
     Syntactic(const std::vector<Token>& tokens);
     int nextToken(std::vector<Token>::const_iterator& iterator);
-    void error(const Token &token);
+    void error(const Token &token, int idx);
 
     std::vector<Token> tokens;
 };

@@ -32,6 +32,7 @@ std::vector <Token> Scanner::scanTokens() {
         scanToken();
     }
 
+    addToken(UNKNOWN);
     return tokens;
 }
 

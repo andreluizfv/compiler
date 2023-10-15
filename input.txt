@@ -1,1 +1,10 @@
-if(5 == 5 () {}
+type int = integer
+type intArray = array[10] of int
+
+type Pessoa = struct {
+  nome : string;
+  id : int;
+  telefones : intArray
+}
+
+type pessoaArray = array[20] of Pessoa
