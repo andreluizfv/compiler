@@ -139,7 +139,8 @@ namespace Semantics {
         Attr(int size, non_term type, AttrVariant attr) : size(size), type(type), attr(std::move(attr)) {}
     };
 
-    void addRule(int rule, int last_snd_token, int last_const_idx, int line, std::unordered_map<int, Object> &constants);
+    void addRule(int rule, int last_snd_token, int last_const_idx, int line, const std::unordered_map<int, Object> &constants,
+                 bool& err);
     bool isSameType(const std::shared_ptr<Obj>& t1, const std::shared_ptr<Obj>& t2);
 }
 

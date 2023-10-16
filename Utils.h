@@ -10,6 +10,8 @@
 #include <string>
 #include "TokenType.h"
 #include "ParserTables.h"
+#include "Token.h"
+
 namespace Utils {
     static std::vector<std::string> reservedKeywords = {
             "ARRAY", "BOOLEAN", "BREAK", "CHAR", "CONTINUE", "DO", "ELSE", "FALSE", "FUNCTION", "IF",
@@ -21,6 +23,7 @@ namespace Utils {
     public:
         inline static std::map<std::string, int> mapObject;
         inline static std::vector<std::variant<int,std::string,char>> constants;
+        inline static std::unordered_map<int, Object> constantsMap;
         inline static int count;
         static int searchName(std::string &word);
         static int addCharConst(char c);
