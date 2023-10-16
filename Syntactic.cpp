@@ -27,6 +27,7 @@ Syntactic::Syntactic(const std::vector<Token>& tokens) {
     int last_const_idx = -1;
     auto itr = tokens.begin();
     std::stack<int> stack;
+    std::unordered_map<int, Object> counterMap;
 
     stack.push(0);
     int q = 0;
@@ -36,10 +37,10 @@ Syntactic::Syntactic(const std::vector<Token>& tokens) {
         if (itr->tokenSecond != -1) last_snd_token = itr->tokenSecond;
         if (itr->const_idx != -1) {
             last_const_idx = itr->const_idx;
-            Utils::Literals::constantsMap[last_const_idx] = itr->literal;
+            counterMap[last_const_idx] = itr->literal;
         }
 
-g        int a = itr->type + nterminal_shift;
+        int a = itr->type + nterminal_shift;
         int p = action_table[q][a];
         if( IS_SHIFT(p) ) {
             stack.push(p);
@@ -49,7 +50,7 @@ g        int a = itr->type + nterminal_shift;
             int r = RULE(p)-1;
             if (r == 0) break;
             bool err = false;
-            Semantics::addRule(r, last_snd_token, last_const_idx, -1, Utils::Literals::constantsMap, err);
+            Semantics::addRule(r, last_snd_token, last_const_idx, -1, counterMap, err);
             if (err) break;
 
             for (int i = 0; i <  aux_table[r][0]; i++) stack.pop();
