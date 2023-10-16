@@ -1197,7 +1197,7 @@ namespace Semantics {
             }
 
             case R_C_0: {
-                char val = std::get<char>(constants[last_const_idx]);
+                char val = std::get<char>(constants.find(last_const_idx)->second);
                 auto char_variant =
                         AttrChar{.type = char_t, .pos = last_snd_token, .val = val};
                 auto char_nontem = Attr(-1, _C, char_variant);
@@ -1206,7 +1206,7 @@ namespace Semantics {
             }
 
             case R_STR_0: {
-                std::string val = std::get<std::string>(constants[last_const_idx]);
+                std::string val = std::get<std::string>(constants.find(last_const_idx)->second);
                 auto string_variant = AttrString{
                         .type = string_t, .pos = last_snd_token, .val = val};
                 auto string_nontem = Attr(-1, _STR, string_variant);
@@ -1215,7 +1215,7 @@ namespace Semantics {
             }
 
             case R_NUM_0: {
-                int val = std::get<int>(constants[last_const_idx]);
+                int val = std::get<int>(constants.find(last_const_idx)->second);
                 auto num_variant =
                         AttrNum{.type = int_t, .pos = last_snd_token, .val = val};
                 auto num_nontem = Attr(-1, _NUM, num_variant);
