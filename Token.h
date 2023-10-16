@@ -5,7 +5,7 @@
 #include <variant>
 #include "TokenType.h"
 
-typedef std::variant<std::monostate, std::string, double, char> Object;
+typedef std::variant<std::monostate, std::string, int, double, char> Object;
 
 class Token {
 public:
