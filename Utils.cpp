@@ -29,6 +29,8 @@ int Literals::addStringConst(std::string s){
     constants.emplace_back(s);
     return (int) constants.size() - 1;
 }
+
+
 //auto Utils::Literals::mapObject = std::map<std::string, int>();
 //auto Utils::Literals::constants = std::vector<std::variant<int,std::string,char>>();
 //int Utils::Literals::count = 0;

@@ -18,11 +18,10 @@ namespace Utils {
     int searchKeyword(const std::string &word);
 
     class Literals {
-    private:
+    public:
         inline static std::map<std::string, int> mapObject;
         inline static std::vector<std::variant<int,std::string,char>> constants;
         inline static int count;
-    public:
         static int searchName(std::string &word);
         static int addCharConst(char c);
         static int addStringConst(std::string s);
