@@ -32,6 +32,7 @@ std::vector <Token> Scanner::scanTokens() {
         scanToken();
     }
 
+    addToken(UNKNOWN);
     return tokens;
 }
 
@@ -100,11 +101,7 @@ void Scanner::addToken(TokenType type) {
 
 void Scanner::addToken(TokenType type, int tokenSecond) {
     std::string txt = source.substr(start, current - start);
-    tokens.emplace_back(type, txt, "undefined", tokenSecond);
-}
-
-void Scanner::addToken(TokenType type, const Object& literal) {
-    tokens.emplace_back(type, source.substr(start, current - start), literal);
+    tokens.emplace_back(type, txt, "undefined", Utils::Literals::mapObject[txt], -1);
 }
 
 void Scanner::addToken(TokenType type, const Object& literal, int tokenSecond) {
@@ -157,7 +154,8 @@ void Scanner::parseString() {
 
     uint len = current - start - 1;
     parseNextChar();
-    int tokenSecond = Utils::Literals::addStringConst(source.substr(start + 1, len));
+    std::string literal = source.substr(start + 1, len);
+    int tokenSecond = Utils::Literals::addStringConst(literal);
     addToken(STRINGVAL, source.substr(start + 1, len), tokenSecond);
 }
 

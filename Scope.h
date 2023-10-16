@@ -1,24 +1,34 @@
-#pragma once
-#ifndef COMPILER_SCOPE_H
-#define COMPILER_SCOPE_H
+#ifndef SCOPE_H
+#define SCOPE_H
+
+#include <memory>
+#include <optional>
 #include <vector>
-using namespace std;
-namespace Scope
-{
-    class scope_object{
+
+#include "Scanner.h"
+#include "Semantics.h"
+
+namespace Scope {
+    class Block {
     public:
-        int nName;
-        scope_object(int nName);
+        std::vector<std::shared_ptr<Semantics::Obj>> objs;
     };
 
-    vector<vector<scope_object>> SymbolTable;
-    int nCurrentLevel = -1;
+    class SymbolTable {
+    public:
+        SymbolTable();
 
-    int NewBlock();
-    int EndBlock();
-    scope_object Define(int tokenSecond);
-    scope_object SearchWhenDeclared(int tokenSecond);
-    scope_object FindWhenUsed(int tokenSecond);
+        std::vector<Block> blocks;
+
+        std::vector<Block>::iterator newBlock();
+
+        std::vector<Block>::iterator endBlock();
+
+        std::vector<std::shared_ptr<Semantics::Obj>>::iterator define(Semantics::Obj &obj);
+
+        std::optional<std::vector<std::shared_ptr<Semantics::Obj>>::iterator> searchWhenDeclared(Semantics::Obj &obj);
+
+        std::optional<std::vector<std::shared_ptr<Semantics::Obj>>::iterator> findWhenUsed(Semantics::Obj &obj);
+    };
 }
-
-#endif // SCOPE_TOKEN_H
+#endif // SCOPE_H
