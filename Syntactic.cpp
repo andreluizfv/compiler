@@ -32,7 +32,6 @@ Syntactic::Syntactic(const std::vector<Token>& tokens) {
     int q = 0;
     int nterminal_shift = 35; // passando os não terminais para pegar os tokens terminais
     int FINAL = 1; // estado final da tabela (linha so com zeros)
-    int a = nextToken(itr) + nterminal_shift;
     do {
         if (itr->tokenSecond != -1) last_snd_token = itr->tokenSecond;
         if (itr->const_idx != -1) {
@@ -40,11 +39,11 @@ Syntactic::Syntactic(const std::vector<Token>& tokens) {
             Utils::Literals::constantsMap[last_const_idx] = itr->literal;
         }
 
-
+g        int a = itr->type + nterminal_shift;
         int p = action_table[q][a];
         if( IS_SHIFT(p) ) {
             stack.push(p);
-            a = nextToken(itr) + nterminal_shift;
+            nextToken(itr) + nterminal_shift;
         } else
         if( IS_REDUCTION(p) ) {
             int r = RULE(p)-1;
