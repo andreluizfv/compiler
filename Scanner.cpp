@@ -96,12 +96,12 @@ char Scanner::parseNextChar() {
 
 void Scanner::addToken(TokenType type) {
     std::string txt = source.substr(start, current - start);
-    tokens.emplace_back(type, txt, "undefined");
+    tokens.emplace_back(type, txt, std::monostate());
 }
 
 void Scanner::addToken(TokenType type, int tokenSecond) {
     std::string txt = source.substr(start, current - start);
-    tokens.emplace_back(type, txt, "undefined", Utils::Literals::mapObject[txt], -1);
+    tokens.emplace_back(type, txt, std::monostate(), Utils::Literals::mapObject[txt], -1);
 }
 
 void Scanner::addToken(TokenType type, const Object& literal, int tokenSecond) {
@@ -171,7 +171,7 @@ void Scanner::parseNumber() {
         while (isDigit(peek()) and !isEnd()) parseNextChar();
     }
     int tokenSecond = Utils::Literals::addIntConst(stoi(source.substr(start, current - start)));
-    addToken(NUMERAL,source.substr(start, current - start), tokenSecond);
+    addToken(NUMERAL,std::stoi(source.substr(start, current - start)), tokenSecond);
 }
 
 bool Scanner::isAlphanumeric(char c) {
