@@ -51,6 +51,8 @@ Syntactic::Syntactic(const std::vector<Token>& tokens) {
             if (r == 0) break;
             bool err = false;
             Semantics::addRule(r, last_snd_token, last_const_idx, -1, Utils::Literals::constantsMap, err);
+            if (err) break;
+
             for (int i = 0; i <  aux_table[r][0]; i++) stack.pop();
             stack.push(action_table[stack.top()][aux_table[r][1]]);
         } else {
