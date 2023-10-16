@@ -19,14 +19,17 @@ int Literals::searchName(std::string& word){
 }
 int Literals::addIntConst(int n){
     constants.emplace_back(n);
+    constantsMap[constants.size() - 1] = n;
     return (int) constants.size() - 1;
 }
 int Literals::addCharConst(char c){
     constants.emplace_back(c);
+    constantsMap[constants.size() - 1] = c;
     return (int) constants.size() - 1;
 }
 int Literals::addStringConst(std::string s){
     constants.emplace_back(s);
+    constantsMap[constants.size() - 1] = s;
     return (int) constants.size() - 1;
 }
 

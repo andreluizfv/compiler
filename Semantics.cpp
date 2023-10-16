@@ -16,8 +16,9 @@ namespace {
     std::shared_ptr<Semantics::Obj> universal_t =
             std::make_shared<Semantics::Obj>(-1, Semantics::SCALAR_TYPE_, std::monostate());
 
-    void error(int line, std::string errorMessage) {
+    void error(int line, std::string errorMessage, bool& err) {
             std::cout << "error at " << line << " message: "  << errorMessage;
+            err = true;
     }
 }
 
@@ -59,7 +60,7 @@ namespace Semantics {
     }
 
     void addRule(int rule, int last_snd_token, int last_const_idx, int line,
-                            std::unordered_map<int, Object> &constants) {
+                            const std::unordered_map<int, Object> &constants, bool& err) {
         static std::shared_ptr<Obj> curr_func;
         Scope::SymbolTable symtable;
         std::stack<Attr> semantic_stack;
@@ -108,7 +109,7 @@ namespace Semantics {
                 } else {
                     t.attr = AttrType{universal_t};
                     t.size = 0;
-                    error(line, "Sema error: Type expected");
+                    error(line, "Sema error: Type expected", err);
                 }
                 semantic_stack.push(t);
                 break;
@@ -339,7 +340,9 @@ namespace Semantics {
                 int l = std::get<AttrLabel>(me.attr).label;
                 auto t = std::get<AttrType>(e.attr).type;
 
-                if (!isSameType(t, bool_t)) error(line, "Sema error: Invalid type");
+                if (!isSameType(t, bool_t)) {
+                    error(line, "Sema error: Invalid type", err);
+                }
 
                 break;
             }
@@ -353,7 +356,9 @@ namespace Semantics {
                 int l = std::get<AttrLabel>(mt.attr).label;
                 auto t = std::get<AttrType>(e.attr).type;
 
-                if (!isSameType(t, bool_t)) error(line, "Sema error: Invalid type");
+                if (!isSameType(t, bool_t)) {
+                    error(line, "Sema error: Invalid type", err);
+                }
 
                 break;
             }
@@ -391,7 +396,9 @@ namespace Semantics {
                 int l2 = std::get<AttrLabel>(mt.attr).label;
                 auto t = std::get<AttrType>(e.attr).type;
 
-                if (!isSameType(t, bool_t)) error(line, "Sema error: Invalid type");
+                if (!isSameType(t, bool_t)) {
+                    error(line, "Sema error: Invalid type", err);
+                }
 
                 break;
             }
@@ -405,7 +412,9 @@ namespace Semantics {
                 int l = std::get<AttrLabel>(mw.attr).label;
                 auto t = std::get<AttrType>(e.attr).type;
 
-                if (!isSameType(t, bool_t)) error(line, "Sema error: Invalid type");
+                if (!isSameType(t, bool_t)) {
+                    error(line, "Sema error: Invalid type", err);
+                }
 
                 break;
             }
@@ -423,8 +432,9 @@ namespace Semantics {
 
                 auto t = std::get<AttrType>(lv.attr).type;
 
-                if (!isSameType(std::get<AttrType>(e.attr).type, std::get<AttrType>(lv.attr).type))
-                    error(line, "Sema error: Type mismatch");
+                if (!isSameType(std::get<AttrType>(e.attr).type, std::get<AttrType>(lv.attr).type)) {
+                    error(line, "Sema error: Type mismatch", err);
+                }
 
                 break;
             }
@@ -436,8 +446,9 @@ namespace Semantics {
                 auto e = semantic_stack.top();
                 semantic_stack.pop();
 
-                if (!isSameType(std::get<AttrType>(e.attr).type, std::get<ObjFunc>(curr_func->obj).ret_type))
-                    error(line, "Sema error: Type mismatch");
+                if (!isSameType(std::get<AttrType>(e.attr).type, std::get<ObjFunc>(curr_func->obj).ret_type)) {
+                    error(line, "Sema error: Type mismatch", err);
+                }
 
                 break;
             }
@@ -448,10 +459,12 @@ namespace Semantics {
                 auto e1 = semantic_stack.top();
                 semantic_stack.pop();
 
-                if (!isSameType(std::get<AttrType>(l.attr).type, bool_t))
-                    error(line, "Sema error: Invalid type");
-                if (!isSameType(std::get<AttrType>(e1.attr).type, bool_t))
-                    error(line, "Sema error: Invalid type");
+                if (!isSameType(std::get<AttrType>(l.attr).type, bool_t)) {
+                    error(line, "Sema error: Invalid type", err);
+                }
+                if (!isSameType(std::get<AttrType>(e1.attr).type, bool_t)) {
+                    error(line, "Sema error: Invalid type", err);
+                }
 
                 auto e0 = Attr(-1, _E, AttrType{bool_t});
                 semantic_stack.push(e0);
@@ -465,10 +478,12 @@ namespace Semantics {
                 auto e1 = semantic_stack.top();
                 semantic_stack.pop();
 
-                if (!isSameType(std::get<AttrType>(l.attr).type, bool_t))
-                    error(line, "Sema error: Invalid type");
-                if (!isSameType(std::get<AttrType>(e1.attr).type, bool_t))
-                    error(line, "Sema error: Invalid type");
+                if (!isSameType(std::get<AttrType>(l.attr).type, bool_t)) {
+                    error(line, "Sema error: Invalid type", err);
+                }
+                if (!isSameType(std::get<AttrType>(e1.attr).type, bool_t)) {
+                    error(line, "Sema error: Invalid type", err);
+                }
 
                 auto e0 = Attr(-1, _E, AttrType{bool_t});
                 semantic_stack.push(e0);
@@ -493,8 +508,9 @@ namespace Semantics {
                 auto l1 = semantic_stack.top();
                 semantic_stack.pop();
 
-                if (!isSameType(std::get<AttrType>(r.attr).type,std::get<AttrType>(l1.attr).type))
-                    error(line, "Sema error: Type mismatch");
+                if (!isSameType(std::get<AttrType>(r.attr).type,std::get<AttrType>(l1.attr).type)) {
+                    error(line, "Sema error: Type mismatch", err);
+                }
 
                 auto l0 = Attr(-1, _L, AttrType{bool_t});
                 semantic_stack.push(l0);
@@ -508,8 +524,9 @@ namespace Semantics {
                 auto l1 = semantic_stack.top();
                 semantic_stack.pop();
 
-                if (!isSameType(std::get<AttrType>(r.attr).type,std::get<AttrType>(l1.attr).type))
-                    error(line, "Sema error: Type mismatch");
+                if (!isSameType(std::get<AttrType>(r.attr).type,std::get<AttrType>(l1.attr).type)) {
+                    error(line, "Sema error: Type mismatch", err);
+                }
 
                 auto l0 = Attr(-1, _L, AttrType{bool_t});
                 semantic_stack.push(l0);
@@ -523,8 +540,9 @@ namespace Semantics {
                 auto l1 = semantic_stack.top();
                 semantic_stack.pop();
 
-                if (!isSameType(std::get<AttrType>(r.attr).type,std::get<AttrType>(l1.attr).type))
-                    error(line, "Sema error: Type mismatch");
+                if (!isSameType(std::get<AttrType>(r.attr).type,std::get<AttrType>(l1.attr).type)) {
+                    error(line, "Sema error: Type mismatch", err);
+                }
 
                 auto l0 = Attr(-1, _L, AttrType{bool_t});
                 semantic_stack.push(l0);
@@ -538,8 +556,9 @@ namespace Semantics {
                 auto l1 = semantic_stack.top();
                 semantic_stack.pop();
 
-                if (!isSameType(std::get<AttrType>(r.attr).type,std::get<AttrType>(l1.attr).type))
-                    error(line, "Sema error: Type mismatch");
+                if (!isSameType(std::get<AttrType>(r.attr).type,std::get<AttrType>(l1.attr).type)) {
+                    error(line, "Sema error: Type mismatch", err);
+                }
 
                 auto l0 = Attr(-1, _L, AttrType{bool_t});
                 semantic_stack.push(l0);
@@ -553,8 +572,9 @@ namespace Semantics {
                 auto l1 = semantic_stack.top();
                 semantic_stack.pop();
 
-                if (!isSameType(std::get<AttrType>(r.attr).type,std::get<AttrType>(l1.attr).type))
-                    error(line, "Sema error: Type mismatch");
+                if (!isSameType(std::get<AttrType>(r.attr).type,std::get<AttrType>(l1.attr).type)) {
+                    error(line, "Sema error: Type mismatch", err);
+                }
 
                 auto l0 = Attr(-1, _L, AttrType{bool_t});
                 semantic_stack.push(l0);
@@ -568,8 +588,9 @@ namespace Semantics {
                 auto l1 = semantic_stack.top();
                 semantic_stack.pop();
 
-                if (!isSameType(std::get<AttrType>(r.attr).type,std::get<AttrType>(l1.attr).type))
-                    error(line, "Sema error: Type mismatch");
+                if (!isSameType(std::get<AttrType>(r.attr).type,std::get<AttrType>(l1.attr).type)) {
+                    error(line, "Sema error: Type mismatch", err);
+                }
 
                 auto l0 = Attr(-1, _L, AttrType{bool_t});
                 semantic_stack.push(l0);
@@ -596,12 +617,14 @@ namespace Semantics {
 
                 auto p = std::get<AttrType>(r1.attr).type;
 
-                if (!isSameType(std::get<AttrType>(y.attr).type,std::get<AttrType>(r1.attr).type))
-                    error(line, "Sema error: Type mismatch");
+                if (!isSameType(std::get<AttrType>(y.attr).type,std::get<AttrType>(r1.attr).type)) {
+                    error(line, "Sema error: Type mismatch", err);
+                }
 
                 if (!isSameType(std::get<AttrType>(r1.attr).type, int_t) and
-                    !isSameType(std::get<AttrType>(r1.attr).type, string_t))
-                    error(line, "Sema error: Invalid type");
+                    !isSameType(std::get<AttrType>(r1.attr).type, string_t)) {
+                    error(line, "Sema error: Invalid type", err);
+                }
 
                 auto r0 = Attr(-1, _R, AttrType{p});
                 semantic_stack.push(r0);
@@ -617,11 +640,13 @@ namespace Semantics {
 
                 auto p = std::get<AttrType>(r1.attr).type;
 
-                if (!isSameType(std::get<AttrType>(y.attr).type,std::get<AttrType>(r1.attr).type))
-                    error(line, "Sema error: Type mismatch");
+                if (!isSameType(std::get<AttrType>(y.attr).type,std::get<AttrType>(r1.attr).type)) {
+                    error(line, "Sema error: Type mismatch", err);
+                }
 
-                if (!isSameType(std::get<AttrType>(r1.attr).type, int_t))
-                    error(line, "Sema error: Invalid type");
+                if (!isSameType(std::get<AttrType>(r1.attr).type, int_t)) {
+                    error(line, "Sema error: Invalid type", err);
+                }
 
                 auto r0 = Attr(-1, _R, AttrType{p});
                 semantic_stack.push(r0);
@@ -649,11 +674,13 @@ namespace Semantics {
                 auto p = std::get<AttrType>(y.attr).type;
 
                 if (!isSameType(std::get<AttrType>(y.attr).type,
-                                 std::get<AttrType>(f.attr).type))
-                    error(line, "Sema error: Type mismatch");
+                                 std::get<AttrType>(f.attr).type)) {
+                    error(line, "Sema error: Type mismatch", err);
+                }
 
-                if (!isSameType(std::get<AttrType>(y.attr).type, int_t))
-                    error(line, "Sema error: Invalid type");
+                if (!isSameType(std::get<AttrType>(y.attr).type, int_t)) {
+                    error(line, "Sema error: Invalid type", err);
+                }
 
                 auto y0 = Attr(-1, _Y, AttrType{p});
                 semantic_stack.push(y0);
@@ -670,11 +697,13 @@ namespace Semantics {
                 auto p = std::get<AttrType>(y.attr).type;
 
                 if (!isSameType(std::get<AttrType>(y.attr).type,
-                                 std::get<AttrType>(f.attr).type))
-                    error(line, "Sema error: Type mismatch");
+                                 std::get<AttrType>(f.attr).type)) {
+                    error(line, "Sema error: Type mismatch", err);
+                }
 
-                if (!isSameType(std::get<AttrType>(y.attr).type, int_t))
-                    error(line, "Sema error: Invalid type");
+                if (!isSameType(std::get<AttrType>(y.attr).type, int_t)) {
+                    error(line, "Sema error: Invalid type", err);
+                }
 
                 auto y0 = Attr(-1, _Y, AttrType{p});
                 semantic_stack.push(y0);
@@ -712,8 +741,9 @@ namespace Semantics {
 
                 auto p = std::get<AttrType>(lv.attr).type;
 
-                if (!isSameType(std::get<AttrType>(lv.attr).type, int_t))
-                    error(line, "Sema error: Invalid type");
+                if (!isSameType(std::get<AttrType>(lv.attr).type, int_t)) {
+                    error(line, "Sema error: Invalid type", err);
+                }
 
                 auto f = Attr(-1, _F, AttrType{int_t});
                 semantic_stack.push(f);
@@ -727,8 +757,9 @@ namespace Semantics {
 
                 auto p = std::get<AttrType>(lv.attr).type;
 
-                if (!isSameType(std::get<AttrType>(lv.attr).type, int_t))
-                    error(line, "Sema error: Invalid type");
+                if (!isSameType(std::get<AttrType>(lv.attr).type, int_t)) {
+                    error(line, "Sema error: Invalid type", err);
+                }
 
                 auto f = Attr(-1, _F, AttrType{int_t});
                 semantic_stack.push(f);
@@ -742,8 +773,9 @@ namespace Semantics {
 
                 auto p = std::get<AttrType>(lv.attr).type;
 
-                if (!isSameType(std::get<AttrType>(lv.attr).type, int_t))
-                    error(line, "Sema error: Invalid type");
+                if (!isSameType(std::get<AttrType>(lv.attr).type, int_t)) {
+                    error(line, "Sema error: Invalid type", err);
+                }
 
                 auto f = Attr(-1, _F, AttrType{int_t});
                 semantic_stack.push(f);
@@ -757,8 +789,9 @@ namespace Semantics {
 
                 auto p = std::get<AttrType>(lv.attr).type;
 
-                if (!isSameType(std::get<AttrType>(lv.attr).type, int_t))
-                    error(line, "Sema error: Invalid type");
+                if (!isSameType(std::get<AttrType>(lv.attr).type, int_t)) {
+                    error(line, "Sema error: Invalid type", err);
+                }
 
                 auto f = Attr(-1, _F, AttrType{int_t});
                 semantic_stack.push(f);
@@ -800,8 +833,9 @@ namespace Semantics {
 
                 auto t = std::get<AttrType>(f1.attr).type;
 
-                if (!isSameType(std::get<AttrType>(f1.attr).type, int_t))
-                    error(line, "Sema error: Invalid type");
+                if (!isSameType(std::get<AttrType>(f1.attr).type, int_t)) {
+                    error(line, "Sema error: Invalid type", err);
+                }
 
                 auto f = Attr(-1, _F, AttrType{t});
                 semantic_stack.push(f);
@@ -815,8 +849,9 @@ namespace Semantics {
 
                 auto t = std::get<AttrType>(f1.attr).type;
 
-                if (!isSameType(std::get<AttrType>(f1.attr).type, int_t))
-                    error(line, "Sema error: Invalid type");
+                if (!isSameType(std::get<AttrType>(f1.attr).type, int_t)) {
+                    error(line, "Sema error: Invalid type", err);
+                }
 
                 auto f = Attr(-1, _F, AttrType{t});
                 semantic_stack.push(f);
@@ -885,13 +920,13 @@ namespace Semantics {
                         AttrLe{.type = nullptr, .param = {}, .err = false, .n = 0};
                 if (!le1_attr.err) {
                     if (le1_attr.param.empty()) {
-                        error(line, "Sema error: To many arguments");
+                        error(line, "Sema error: To many arguments", err);
                         le0_variant.err = true;
                     } else {
                         if (!isSameType(
                                 std::get<ObjType>(le1_attr.param[0]->obj).type,
                                 std::get<AttrType>(e.attr).type))
-                            error(line, "Sema error: Invalid type");
+                            error(line, "Sema error: Invalid type", err);
 
                         le0_variant.param = std::vector<std::shared_ptr<Obj>>(
                                 le1_attr.param.begin() + 1, le1_attr.param.end());
@@ -919,13 +954,13 @@ namespace Semantics {
                 int n = 1;
                 if (!mc_attr.err) {
                     if (mc_attr.param.empty()) {
-                        error(line, "Sema error: To many arguments");
+                        error(line, "Sema error: To many arguments", err);
                         le_variant.err = true;
                     } else {
                         if (!isSameType(
                                 std::get<ObjType>(mc_attr.param[0]->obj).type,
                                 std::get<AttrType>(e.attr).type))
-                            error(line, "Sema error: Invalid type");
+                            error(line, "Sema error: Invalid type", err);
 
                         le_variant.param = std::vector<std::shared_ptr<Obj>>(
                                 mc_attr.param.begin() + 1, mc_attr.param.end());
@@ -949,7 +984,7 @@ namespace Semantics {
 
                 if (t->kindType != STRUCT_TYPE_) {
                     if (t->kindType != UNIVERSAL_) {
-                        error(line, "Sema error: Kind not struct");
+                        error(line, "Sema error: Kind not struct", err);
                     }
                     lv_variant.type = universal_t;
                 } else {
@@ -964,7 +999,7 @@ namespace Semantics {
 
                     if (p == struct_fields.end()) {
                         lv_variant.type = universal_t;
-                        error(line, "Sema error: Field not declared");
+                        error(line, "Sema error: Field not declared", err);
                     } else {
                         lv_variant.type = std::get<ObjType>((*p)->obj).type;
 
@@ -999,7 +1034,7 @@ namespace Semantics {
                     lv_variant.type = char_t;
                 else if (t->kindType != ARRAY_TYPE_) {
                     if (t->kindType != UNIVERSAL_) {
-                        error(line, "Sema error: Kind not array");
+                        error(line, "Sema error: Kind not array", err);
                     }
                     lv_variant.type = universal_t;
                 } else {
@@ -1007,7 +1042,7 @@ namespace Semantics {
                 }
 
                 if (!isSameType(std::get<AttrType>(e.attr).type, int_t)) {
-                    error(line, "Sema error: Invalid index type");
+                    error(line, "Sema error: Invalid index type", err);
                 }
 
                 auto lv = Attr(-1, _LV, lv_variant);
@@ -1024,7 +1059,7 @@ namespace Semantics {
 
                 if (p->kindType != VAR_ and p->kindType != PARAM_) {
                     if (p->kindType != UNIVERSAL_) {
-                        error(line, "Sema error: Kind not var");
+                        error(line, "Sema error: Kind not var", err);
                     }
                     lv_variant.type = universal_t;
                 } else {
@@ -1104,7 +1139,7 @@ namespace Semantics {
                         AttrMc{.type = nullptr, .param = {}, .err = false};
 
                 if (p->kindType != FUNCTION_) {
-                    error(line, "Sema error: Kind not function");
+                    error(line, "Sema error: Kind not function", err);
                     mc_variant.type = universal_t;
                     mc_variant.param = {};
                     mc_variant.err = true;
@@ -1125,7 +1160,7 @@ namespace Semantics {
 
                 auto symbol = symtable.searchWhenDeclared(id);
                 if (symbol.has_value()) {
-                    error(line, "Sema error: Redeclared");
+                    error(line, "Sema error: Redeclared", err);
                 } else
                     symbol = symtable.define(id);
 
@@ -1139,7 +1174,7 @@ namespace Semantics {
 
                 auto symbol = symtable.findWhenUsed(id);
                 if (!symbol.has_value()) {
-                    error(line, "Sema error: Not declared");
+                    error(line, "Sema error: Not declared", err);
                     symbol = symtable.define(id);
                 }
 
