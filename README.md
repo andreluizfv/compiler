@@ -8,4 +8,9 @@ cmake ..
 
 make
 
+cd ..
+
 ./build/compiler input.txt
+
+
+outputfile: codefile.txt 
