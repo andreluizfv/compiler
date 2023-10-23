@@ -1,6 +1,7 @@
 #ifndef COMPILER_SEMANTICS_H
 #define COMPILER_SEMANTICS_H
 
+#include <fstream>
 #include <memory>
 #include <stack>
 #include <string>
@@ -140,7 +141,7 @@ namespace Semantics {
     };
 
     void addRule(int rule, int last_snd_token, int last_const_idx, int line, const std::unordered_map<int, Object> &constants,
-                 bool& err);
+                 bool& err, std::ofstream codeFile);
     bool isSameType(const std::shared_ptr<Obj>& t1, const std::shared_ptr<Obj>& t2);
 }
 
