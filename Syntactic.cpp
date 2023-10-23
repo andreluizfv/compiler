@@ -22,7 +22,7 @@ void Syntactic::error(const Token& token, int idx) {
     std::cout << "Syntactic error for " << token.toString() << "at index " << idx;
 }
 
-Syntactic::Syntactic(const std::vector<Token>& tokens) {
+Syntactic::Syntactic(const std::vector<Token>& tokens, std::ofstream codeFile) {
     int last_snd_token = -1;
     int last_const_idx = -1;
     auto itr = tokens.begin();
@@ -50,7 +50,7 @@ Syntactic::Syntactic(const std::vector<Token>& tokens) {
             int r = RULE(p)-1;
             if (r == 0) break;
             bool err = false;
-            Semantics::addRule(r, last_snd_token, last_const_idx, -1, counterMap, err);
+            Semantics::addRule(r, last_snd_token, last_const_idx, -1, counterMap, err, codeFile);
             if (err) break;
 
             for (int i = 0; i <  aux_table[r][0]; i++) stack.pop();

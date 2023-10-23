@@ -1,6 +1,8 @@
 #include <iostream>
+#include <fstream>
 #include "Semantics.h"
 #include "Scope.h"
+
 
 
 #define IS_TYPE_KIND(k) ((k) == ARRAY_TYPE_ or (k) == STRUCT_TYPE_ or (k) == ALIAS_TYPE_ or (k) == SCALAR_TYPE_)
@@ -60,7 +62,7 @@ namespace Semantics {
     }
 
     void addRule(int rule, const int last_snd_token, const int last_const_idx, int line,
-                            const std::unordered_map<int, Object> &constants, bool& err) {
+                 const std::unordered_map<int, Object> &constants, bool& err, FILE *codeFile) {
         static std::shared_ptr<Obj> curr_func;
         static Scope::SymbolTable symtable;
         static std::stack<Attr> semantic_stack;
@@ -263,7 +265,13 @@ namespace Semantics {
                 break;
             }
 
-            case R_B_0:
+            case R_B_0: {
+                std::fprintf(codeFile, "END_FUNC\n");
+                int currentPos = std::ftell(codeFile);
+                std::fseek(codeFile, func_var_pos, SEEK_SET);
+                std::fprintf(codeFile, "%02d\n", std::get<ObjFunc>(curr_func->obj).n_vars);
+                std::fseek(codeFile, currentPos, SEEK_SET);
+            }
             case R_LDV_0:
             case R_LDV_1:
             case R_LS_0:
@@ -326,6 +334,7 @@ namespace Semantics {
                 auto mt_variant = Attr(0, _MT, AttrLabel{l});
                 semantic_stack.push(mt_variant);
 
+                fprintf(codeFile, "\tTJMP_FW L%d\n", l);
                 break;
             }
 
@@ -344,6 +353,7 @@ namespace Semantics {
                     error(line, "Semantic: Invalid type", err);
                 }
 
+                fprintf(codeFile, "L%d:\n", l);
                 break;
             }
 
@@ -360,6 +370,7 @@ namespace Semantics {
                     error(line, "Semantic: Invalid type", err);
                 }
 
+                fprintf(codeFile, "L%d:\n", l);
                 break;
             }
 
@@ -372,6 +383,7 @@ namespace Semantics {
                 auto me = Attr(-1, _ME, AttrLabel{l2});
                 semantic_stack.push(me);
 
+                fprintf(codeFile, "\tJMP_FW L%d\nL:%d\n", l2, l1);
                 break;
             }
 
@@ -381,6 +393,7 @@ namespace Semantics {
                 auto mw = Attr(-1, _MW, AttrLabel{l});
                 semantic_stack.push(mw);
 
+                fprintf(codeFile, "L%d:\n", l);
                 break;
             }
 
@@ -400,6 +413,7 @@ namespace Semantics {
                     error(line, "Semantic: Invalid type", err);
                 }
 
+                fprintf(codeFile, "\tJMP_BW L%d\nL%d:\n", l1, l2);
                 break;
             }
 
@@ -416,6 +430,7 @@ namespace Semantics {
                     error(line, "Semantic: Invalid type", err);
                 }
 
+                fprintf(codeFile, "\tNOT\n\tTJMP_BW L%d:\n", l);
                 break;
             }
 
@@ -435,7 +450,7 @@ namespace Semantics {
                 if (!isSameType(std::get<AttrType>(e.attr).type, std::get<AttrType>(lv.attr).type)) {
                     error(line, "Semantic: Type mismatch", err);
                 }
-
+                fprintf(codeFile, "\tSTORE_REF %d\n", std::get<ObjAlias>(t->obj).n_size);
                 break;
             }
 
@@ -449,7 +464,7 @@ namespace Semantics {
                 if (!isSameType(std::get<AttrType>(e.attr).type, std::get<ObjFunc>(curr_func->obj).ret_type)) {
                     error(line, "Semantic: Type mismatch", err);
                 }
-
+                fprintf(codeFile, "\tRET\n");
                 break;
             }
 
@@ -469,6 +484,7 @@ namespace Semantics {
                 auto e0 = Attr(-1, _E, AttrType{bool_t});
                 semantic_stack.push(e0);
 
+                fprintf(codeFile, "\tAND\n");
                 break;
             }
 
@@ -488,6 +504,7 @@ namespace Semantics {
                 auto e0 = Attr(-1, _E, AttrType{bool_t});
                 semantic_stack.push(e0);
 
+                fprintf(codeFile, "\tOR\n");
                 break;
             }
 
@@ -515,6 +532,7 @@ namespace Semantics {
                 auto l0 = Attr(-1, _L, AttrType{bool_t});
                 semantic_stack.push(l0);
 
+                fprintf(codeFile, "\tLT\n");
                 break;
             }
 
@@ -531,6 +549,7 @@ namespace Semantics {
                 auto l0 = Attr(-1, _L, AttrType{bool_t});
                 semantic_stack.push(l0);
 
+                fprintf(codeFile, "\tGT\n");
                 break;
             }
 
@@ -547,6 +566,7 @@ namespace Semantics {
                 auto l0 = Attr(-1, _L, AttrType{bool_t});
                 semantic_stack.push(l0);
 
+                fprintf(codeFile, "\tLE\n");
                 break;
             }
 
@@ -563,6 +583,7 @@ namespace Semantics {
                 auto l0 = Attr(-1, _L, AttrType{bool_t});
                 semantic_stack.push(l0);
 
+                fprintf(codeFile, "\tGE\n");
                 break;
             }
 
@@ -579,6 +600,7 @@ namespace Semantics {
                 auto l0 = Attr(-1, _L, AttrType{bool_t});
                 semantic_stack.push(l0);
 
+                fprintf(codeFile, "\tEQ\n");
                 break;
             }
 
@@ -595,6 +617,7 @@ namespace Semantics {
                 auto l0 = Attr(-1, _L, AttrType{bool_t});
                 semantic_stack.push(l0);
 
+                fprintf(codeFile, "\tNE\n");
                 break;
             }
 
@@ -629,6 +652,7 @@ namespace Semantics {
                 auto r0 = Attr(-1, _R, AttrType{p});
                 semantic_stack.push(r0);
 
+                fprintf(codeFile, "\tADD\n");
                 break;
             }
 
@@ -651,6 +675,7 @@ namespace Semantics {
                 auto r0 = Attr(-1, _R, AttrType{p});
                 semantic_stack.push(r0);
 
+                fprintf(codeFile, "\tSUB\n");
                 break;
             }
 
@@ -685,6 +710,7 @@ namespace Semantics {
                 auto y0 = Attr(-1, _Y, AttrType{p});
                 semantic_stack.push(y0);
 
+                fprintf(codeFile, "\tMUL\n");
                 break;
             }
 
@@ -708,6 +734,7 @@ namespace Semantics {
                 auto y0 = Attr(-1, _Y, AttrType{p});
                 semantic_stack.push(y0);
 
+                fprintf(codeFile, "\tDIV\n");
                 break;
             }
 
@@ -732,6 +759,7 @@ namespace Semantics {
                 auto f = Attr(-1, _F, AttrType{p});
                 semantic_stack.push(f);
 
+                fprintf(codeFile, "\tDE_REF %d\n", n);
                 break;
             }
 
@@ -748,6 +776,8 @@ namespace Semantics {
                 auto f = Attr(-1, _F, AttrType{int_t});
                 semantic_stack.push(f);
 
+                fprintf(codeFile, "\tDUP\n\tDUP\n\tDE_REF 1\n");
+                fprintf(codeFile, "\tINC\n\tSTORE_REF 1\n\tDE_REF 1\n");
                 break;
             }
 
@@ -764,6 +794,8 @@ namespace Semantics {
                 auto f = Attr(-1, _F, AttrType{int_t});
                 semantic_stack.push(f);
 
+                fprintf(codeFile, "\tDUP\n\tDUP\n\tDE_REF 1\n");
+                fprintf(codeFile, "\tDEC\n\tSTORE_REF 1\n\tDE_REF 1\n");
                 break;
             }
 
@@ -780,6 +812,8 @@ namespace Semantics {
                 auto f = Attr(-1, _F, AttrType{int_t});
                 semantic_stack.push(f);
 
+                fprintf(codeFile, "\tDUP\n\tDUP\n\tDE_REF 1\n\tINC\n");
+                fprintf(codeFile, "\tSTORE_REF 1\n\tDE_REF 1\n\tDEC\n");
                 break;
             }
 
@@ -796,6 +830,8 @@ namespace Semantics {
                 auto f = Attr(-1, _F, AttrType{int_t});
                 semantic_stack.push(f);
 
+                fprintf(codeFile, "\tDUP\n\tDUP\tDE_REF 1\n\tDEC\n");
+                fprintf(codeFile, "\tSTORE_REF 1\tDE_REF 1\n\tINC\n");
                 break;
             }
 
@@ -824,6 +860,7 @@ namespace Semantics {
                 auto f = Attr(-1, _F, AttrType{mc_type});
                 semantic_stack.push(f);
 
+                fprintf(codeFile, "\tCALL %d\n", std::get<ObjFunc>(p->obj).n_idx);
                 break;
             }
 
@@ -840,6 +877,7 @@ namespace Semantics {
                 auto f = Attr(-1, _F, AttrType{t});
                 semantic_stack.push(f);
 
+                fprintf(codeFile, "\tNEG\n");
                 break;
             }
 
@@ -856,6 +894,7 @@ namespace Semantics {
                 auto f = Attr(-1, _F, AttrType{t});
                 semantic_stack.push(f);
 
+                fprintf(codeFile, "\tNOT\n");
                 break;
             }
 
@@ -866,6 +905,7 @@ namespace Semantics {
                 auto f = Attr(-1, _F, AttrType{bool_t});
                 semantic_stack.push(f);
 
+                fprintf(codeFile, "\tLOAD_CONST %d\n", last_const_idx);
                 break;
             }
 
@@ -876,6 +916,7 @@ namespace Semantics {
                 auto f = Attr(-1, _F, AttrType{bool_t});
                 semantic_stack.push(f);
 
+                fprintf(codeFile, "\tLOAD_CONST %d\n", last_const_idx);
                 break;
             }
 
@@ -886,6 +927,7 @@ namespace Semantics {
                 auto f = Attr(-1, _F, AttrType{char_t});
                 semantic_stack.push(f);
 
+                fprintf(codeFile, "\tLOAD_CONST %d\n", last_const_idx);
                 break;
             }
 
@@ -896,6 +938,7 @@ namespace Semantics {
                 auto f = Attr(-1, _F, AttrType{string_t});
                 semantic_stack.push(f);
 
+                fprintf(codeFile, "\tLOAD_CONST %d\n", last_const_idx);
                 break;
             }
 
@@ -906,6 +949,7 @@ namespace Semantics {
                 auto f = Attr(-1, _F, AttrType{int_t});
                 semantic_stack.push(f);
 
+                fprintf(codeFile, "\tLOAD_CONST %d\n", last_const_idx);
                 break;
             }
 
@@ -1013,6 +1057,8 @@ namespace Semantics {
                                 .n_size = std::get<ObjType>((*p)->obj).n_size};
                         type.n_size = std::get<ObjType>((*p)->obj).n_size;
                         lv_variant.type->obj = type;
+
+                        fprintf(codeFile, "\tADD %d\n", std::get<ObjType>((*p)->obj).n_idx);
                     }
                 }
 
@@ -1039,6 +1085,8 @@ namespace Semantics {
                     lv_variant.type = universal_t;
                 } else {
                     lv_variant.type = std::get<ObjArray>(t->obj).el_type;
+
+                    fprintf(codeFile, "\tMUL %d\n", std::get<ObjType>(lv_variant.type->obj).n_size);
                 }
 
                 if (!isSameType(std::get<AttrType>(e.attr).type, int_t)) {
@@ -1073,6 +1121,8 @@ namespace Semantics {
                             .base_type = base_type,
                             .n_size = std::get<ObjType>(p->obj).n_size};
                     lv_variant.type->obj = type;
+
+                    fprintf(codeFile, "\tLOAD_REF %d\n", std::get<ObjType>(p->obj).n_idx);
                 }
 
                 auto lv = Attr(-1, _LV, lv_variant);
@@ -1128,6 +1178,10 @@ namespace Semantics {
                 f_obj.n_vars = 0;
                 p->obj = f_obj;
                 curr_func = p;
+
+                fprintf(codeFile, "BEGIN_FUNC %d, %d, ", f_obj.n_idx, f_obj.n_params);
+                func_var_pos = ftell(codeFile);
+                fprintf(codeFile, "   ");
                 break;
             }
 

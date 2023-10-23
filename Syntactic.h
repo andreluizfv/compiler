@@ -9,7 +9,7 @@
 
 class Syntactic {
 public:
-    Syntactic(const std::vector<Token>& tokens);
+    Syntactic(const std::vector<Token>& tokens, std::ofstream codeFile);
     int nextToken(std::vector<Token>::const_iterator& iterator);
     void error(const Token &token, int idx);
 
