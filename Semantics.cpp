@@ -62,7 +62,7 @@ namespace Semantics {
     }
 
     void addRule(int rule, const int last_snd_token, const int last_const_idx, int line,
-                 const std::unordered_map<int, Object> &constants, bool& err, FILE *codeFile) {
+                 const std::unordered_map<int, Object> &constants, bool& err, FILE* codeFile) {
         static std::shared_ptr<Obj> curr_func;
         static Scope::SymbolTable symtable;
         static std::stack<Attr> semantic_stack;

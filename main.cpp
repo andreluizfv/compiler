@@ -5,8 +5,9 @@
 #include "Scanner.h"
 #include "Token.h"
 #include "Syntactic.h"
+#include "stdio.h"
 
-void run(std::string source, std::ofstream codeFile) {
+void run(std::string source, FILE* codeFile) {
     Scanner scanner(source);
     std::vector<Token> tokens = scanner.scanTokens();
 
@@ -16,7 +17,7 @@ void run(std::string source, std::ofstream codeFile) {
     Syntactic syntactic(tokens, codeFile);
 }
 
-void runFile(std::string filePath, std::ofstream codeFile) {
+void runFile(std::string filePath, FILE* codeFile) {
     std::ifstream file(filePath);
     std::stringstream buffer;
 
@@ -27,7 +28,7 @@ void runFile(std::string filePath, std::ofstream codeFile) {
     }
 }
 
-void runPrompt(std::ofstream codeFile) {
+void runPrompt(FILE* codeFile) {
     for (;;) {
         std::cout << "> ";
         std::string line;
@@ -38,7 +39,12 @@ void runPrompt(std::ofstream codeFile) {
 }
 
 int main(int argc, char* argv[]) {
-    std::ofstream codeFile("codeFile.txt");
+    FILE* codeFile = fopen("codeFile.txt", "w");
+    if (codeFile == nullptr)
+    {
+        printf("Error! Could not open file\n");
+        exit(-1); // must include stdlib.h
+    }
     if (argc > 2) {
         std::cout << "Too many cli args";
         exit(64);
@@ -47,4 +53,5 @@ int main(int argc, char* argv[]) {
     } else {
         runPrompt(codeFile);
     }
+    fclose(codeFile);
 }
