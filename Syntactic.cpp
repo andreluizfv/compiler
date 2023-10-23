@@ -22,7 +22,7 @@ void Syntactic::error(const Token& token, int idx) {
     std::cout << "Syntactic error for " << token.toString() << "at index " << idx;
 }
 
-Syntactic::Syntactic(const std::vector<Token>& tokens, std::ofstream codeFile) {
+Syntactic::Syntactic(const std::vector<Token>& tokens, FILE* codeFile) {
     int last_snd_token = -1;
     int last_const_idx = -1;
     auto itr = tokens.begin();
